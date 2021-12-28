@@ -1,0 +1,7 @@
+## Interface: 11401
+
+## Title: CurseActions
+## Notes: Testing GitHub Actions
+## Author: Nomana
+## Version: 0.0.1
+Test.lua
