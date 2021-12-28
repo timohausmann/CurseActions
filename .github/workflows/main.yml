@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: CurseActions
-          path: ${{ github.workspace }}/addon.zip
+          path: ${{ github.workspace }}/CurseActions-${{ env.RELEASE_VERSION }}.zip
       - name: Echo Create new Version in CurseForge
         shell: bash
         run: 'echo curl -v -H "X-Api-Token: ${{ secrets.CURSEFORGE__TOKEN }}" -F "metadata={ ''changelog'': ''New version from Github'', ''gameVersions'': [8722], ''releaseType'': ''beta'' }" -F file=@${{ github.workspace }}/CurseActions-${{ env.RELEASE_VERSION }}.zip "https://wow.curseforge.com/api/projects/${{ secrets.CURSEFORGE__PROJECTID }}/upload-file"'
