@@ -2,4 +2,4 @@
 	GitHub Actions Test
 ----------------------------------------------------------------------]]
 
-print("A very guud AddOn!")
+print("A very guud WoW AddOn!")
