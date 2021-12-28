@@ -2,4 +2,4 @@
 	GitHub Actions Test
 ----------------------------------------------------------------------]]
 
-print("A very good AddOn!")
+print("A very guud AddOn!")
