@@ -1,23 +1,26 @@
 name: Upload to CurseForge
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - '*.*.*'
   workflow_dispatch:
 jobs:
   Zip-And-Upload-Addon-ZIP:  
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
-      - name: Zip files into addon.zip
+      - uses: actions/checkout@v2
+      - name: Set version tag env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Echo version env
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+      - name: Zip files
         uses: papeloto/action-zip@v1
         with:
           files: Test.lua Test.toc
-          dest: addon.zip
+          dest: CurseActions-${{ env.RELEASE_VERSION }}.zip
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
@@ -25,8 +28,8 @@ jobs:
           path: ${{ github.workspace }}/addon.zip
       - name: Echo Create new Version in CurseForge
         shell: bash
-        run: 'echo curl -v -H "X-Api-Token: ${{ secrets.CURSEFORGE__TOKEN }}" -F "metadata={ ''changelog'': ''New version from Github'', ''gameVersions'': [8722], ''releaseType'': ''beta'' }" -F file=@${{ github.workspace }}/addon.zip "https://wow.curseforge.com/api/projects/${{ secrets.CURSEFORGE__PROJECTID }}/upload-file"'
+        run: 'echo curl -v -H "X-Api-Token: ${{ secrets.CURSEFORGE__TOKEN }}" -F "metadata={ ''changelog'': ''New version from Github'', ''gameVersions'': [8722], ''releaseType'': ''beta'' }" -F file=@${{ github.workspace }}/CurseActions-${{ env.RELEASE_VERSION }}.zip "https://wow.curseforge.com/api/projects/${{ secrets.CURSEFORGE__PROJECTID }}/upload-file"'
       - name: Create new Version in CurseForge
         if: github.event_name != 'pull_request'
         shell: bash
-        run: 'curl -v -H "X-Api-Token: ${{ secrets.CURSEFORGE__TOKEN }}" -F "metadata={ ''changelog'': ''New version from Github'', ''gameVersions'': [8722], ''releaseType'': ''beta'' }" -F file=@${{ github.workspace }}/addon.zip "https://wow.curseforge.com/api/projects/${{ secrets.CURSEFORGE__PROJECTID }}/upload-file"' 
+        run: 'curl -v -H "X-Api-Token: ${{ secrets.CURSEFORGE__TOKEN }}" -F "metadata={ ''changelog'': ''New version from Github'', ''gameVersions'': [8722], ''releaseType'': ''beta'' }" -F file=@${{ github.workspace }}/CurseActions-${{ env.RELEASE_VERSION }}.zip "https://wow.curseforge.com/api/projects/${{ secrets.CURSEFORGE__PROJECTID }}/upload-file"' 
